@@ -16,9 +16,9 @@ from setuptools import find_packages, setup
 
 # Do not edit these constants. They will be updated automatically
 # by scripts/update-client.sh.
-CLIENT_VERSION = "3.0.0-snapshot"
+CLIENT_VERSION = "5.0.0"
 PACKAGE_NAME = "kubernetes"
-DEVELOPMENT_STATUS = "4 - Beta"
+DEVELOPMENT_STATUS = "5 - Production/Stable"
 
 # To install the library, run the following
 #
@@ -40,13 +40,13 @@ setup(
     author_email="",
     author="Kubernetes",
     license="Apache License Version 2.0",
-    url="https://github.com/kubernetes-incubator/client-python",
+    url="https://github.com/kubernetes-client/python",
     keywords=["Swagger", "OpenAPI", "Kubernetes"],
     install_requires=REQUIRES,
     tests_require=TESTS_REQUIRES,
     packages=['kubernetes', 'kubernetes.client', 'kubernetes.config',
               'kubernetes.watch', 'kubernetes.client.apis',
-              'kubernetes.client.models'],
+              'kubernetes.stream', 'kubernetes.client.models'],
     include_package_data=True,
     long_description="""\
     Python client for kubernetes http://kubernetes.io/

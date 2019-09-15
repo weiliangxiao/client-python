@@ -1,3 +1,30 @@
+# v5.0.0
+- No changes. The same as `v5.0.0b1`.
+
+# v5.0.0b1
+- Update to Kubernetes 1.9 cluster
+- Label selector for pods is now required and must match the pod template's labels for v1beta2 StatefulSetSpec, ReplicaSetSpec, DaemonSetSpec and DeploymentSpec kubernetes/kubernetes#55357
+- The dynamic admission webhook is split into two kinds, mutating and validating. The kinds have changed completely and old code must be ported to admissionregistration.k8s.io/v1beta1 - MutatingWebhookConfiguration and ValidatingWebhookConfiguration kubernetes/kubernetes#55282
+- DaemonSet, Deployment, ReplicaSet, and StatefulSet have been promoted to GA and are available in the apps/v1 group version kubernetes/kubernetes#53679
+- Introduce new storage.k8s.io/v1alpha1 VolumeAttachment object kubernetes/kubernetes#54463
+- Introduce core/v1 RBDPersistentVolumeSource kubernetes/kubernetes#54302
+- StatefulSet status now has support for conditions kubernetes/kubernetes#55268
+- DaemonSet status now has support for conditions kubernetes/kubernetes#55272
+
+# v4.0.0
+- api change V1PersistentVolumeSpec to V1ScaleIOPersistentVolumeSource #397.
+
+# v4.0.0b1
+- Make sure PyPI source distribution is complete with all files from the root directory
+
+# v4.0.0a1
+- Update to Kubernetes 1.8 cluster
+- IntOrString is now object thus it can be int or string. #18 #359
+- Adding stream package to support calls like exec. The old way of calling them is deprecated. See [Troubleshooting](README.md#why-execattach-calls-doesnt-work)).
+- config.http_proxy_url is deprecated. use configuration.proxy instead.
+- Configuration is not a singleton object anymore. Please use Configuraion.set_default to change default configuration.
+- Configuration class does not support `ws_streaming_protocol` anymore. In ApiClient.set_default_header set `sec-websocket-protocol` to the preferred websocket protocol.
+
 # v3.0.0
 - Fix Operation names for subresources kubernetes/kubernetes#49357
 
