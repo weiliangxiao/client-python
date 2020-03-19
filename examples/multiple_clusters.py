@@ -12,14 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Allows you to pick a context and then lists all pods in the chosen context.
+
+Please install the pick library before running this example.
+"""
+
 from kubernetes import client, config
-# install pick using "pip install pick". It is not included
-# as a dependency because it only used in examples
-from pick import pick
+from kubernetes.client import configuration
+from pick import pick  # install pick using `pip install pick`
 
 
 def main():
-
     contexts, active_context = config.list_kube_config_contexts()
     if not contexts:
         print("Cannot find any context in kube-config file.")

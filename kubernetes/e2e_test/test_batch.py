@@ -16,7 +16,7 @@ import unittest
 import uuid
 
 from kubernetes.client import api_client
-from kubernetes.client.apis import batch_v1_api
+from kubernetes.client.api import batch_v1_api
 from kubernetes.e2e_test import base
 
 
@@ -28,7 +28,7 @@ class TestClientBatch(unittest.TestCase):
 
 
     def test_job_apis(self):
-        client = api_client.ApiClient(config=self.config)
+        client = api_client.ApiClient(configuration=self.config)
         api = batch_v1_api.BatchV1Api(client)
 
         name = 'test-job-' + str(uuid.uuid4())

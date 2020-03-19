@@ -18,14 +18,36 @@ import unittest
 import uuid
 
 from kubernetes.client import api_client
-from kubernetes.client.apis import core_v1_api
+from kubernetes.client.api import core_v1_api
 from kubernetes.e2e_test import base
+from kubernetes.stream import stream
+from kubernetes.stream.ws_client import ERROR_CHANNEL
 
 
 def short_uuid():
     id = str(uuid.uuid4())
     return id[-12:]
 
+
+def manifest_with_command(name, command):
+    return {
+        'apiVersion': 'v1',
+        'kind': 'Pod',
+        'metadata': {
+            'name': name
+        },
+        'spec': {
+            'containers': [{
+                'image': 'busybox',
+                'name': 'sleep',
+                "args": [
+                    "/bin/sh",
+                    "-c",
+                    command
+                ]
+            }]
+        }
+    }
 
 class TestClient(unittest.TestCase):
 
@@ -34,29 +56,11 @@ class TestClient(unittest.TestCase):
         cls.config = base.get_e2e_configuration()
 
     def test_pod_apis(self):
-        client = api_client.ApiClient(config=self.config)
+        client = api_client.ApiClient(configuration=self.config)
         api = core_v1_api.CoreV1Api(client)
 
         name = 'busybox-test-' + short_uuid()
-        pod_manifest = {
-            'apiVersion': 'v1',
-            'kind': 'Pod',
-            'metadata': {
-                'name': name
-            },
-            'spec': {
-                'containers': [{
-                    'image': 'busybox',
-                    'name': 'sleep',
-                    "args": [
-                        "/bin/sh",
-                        "-c",
-                        "while true;do date;sleep 5; done"
-                    ]
-                }]
-            }
-        }
-
+        pod_manifest = manifest_with_command(name, "while true;do date;sleep 5; done")
         resp = api.create_namespaced_pod(body=pod_manifest,
                                          namespace='default')
         self.assertEqual(name, resp.metadata.name)
@@ -74,7 +78,7 @@ class TestClient(unittest.TestCase):
         exec_command = ['/bin/sh',
                         '-c',
                         'for i in $(seq 1 3); do date; done']
-        resp = api.connect_get_namespaced_pod_exec(name, 'default',
+        resp = stream(api.connect_get_namespaced_pod_exec, name, 'default',
                                                    command=exec_command,
                                                    stderr=False, stdin=False,
                                                    stdout=True, tty=False)
@@ -82,14 +86,14 @@ class TestClient(unittest.TestCase):
         self.assertEqual(3, len(resp.splitlines()))
 
         exec_command = 'uptime'
-        resp = api.connect_post_namespaced_pod_exec(name, 'default',
+        resp = stream(api.connect_post_namespaced_pod_exec, name, 'default',
                                                     command=exec_command,
                                                     stderr=False, stdin=False,
                                                     stdout=True, tty=False)
         print('EXEC response : %s' % resp)
         self.assertEqual(1, len(resp.splitlines()))
 
-        resp = api.connect_post_namespaced_pod_exec(name, 'default',
+        resp = stream(api.connect_post_namespaced_pod_exec, name, 'default',
                                                     command='/bin/sh',
                                                     stderr=True, stdin=True,
                                                     stdout=True, tty=False,
@@ -104,7 +108,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual("test string 2", line)
         resp.write_stdin("exit\n")
         resp.update(timeout=5)
-        line = resp.read_channel(api_client.ws_client.ERROR_CHANNEL)
+        line = resp.read_channel(ERROR_CHANNEL)
         status = json.loads(line)
         self.assertEqual(status['status'], 'Success')
         resp.update(timeout=5)
@@ -115,9 +119,48 @@ class TestClient(unittest.TestCase):
 
         resp = api.delete_namespaced_pod(name=name, body={},
                                          namespace='default')
+    def test_exit_code(self):
+        client = api_client.ApiClient(configuration=self.config)
+        api = core_v1_api.CoreV1Api(client)
+
+        name = 'busybox-test-' + short_uuid()
+        pod_manifest = manifest_with_command(name, "while true;do date;sleep 5; done")
+        resp = api.create_namespaced_pod(body=pod_manifest,
+                                         namespace='default')
+        self.assertEqual(name, resp.metadata.name)
+        self.assertTrue(resp.status.phase)
+
+        while True:
+            resp = api.read_namespaced_pod(name=name,
+                                           namespace='default')
+            self.assertEqual(name, resp.metadata.name)
+            self.assertTrue(resp.status.phase)
+            if resp.status.phase == 'Running':
+                break
+            time.sleep(1)
+
+        commands_expected_values = (
+            (["false", 1]),
+            (["/bin/sh", "-c", "sleep 1; exit 3"], 3),
+            (["true", 0]),
+            (["/bin/sh", "-c", "ls /"], 0)
+        )
+        for command, value in commands_expected_values:
+            client = stream(api.connect_get_namespaced_pod_exec, name, 'default',
+                                                       command=command,
+                                                       stderr=True, stdin=False,
+                                                       stdout=True, tty=False,
+                                                       _preload_content=False)
+
+            self.assertIsNone(client.returncode)
+            client.run_forever(timeout=10)
+            self.assertEqual(client.returncode, value)
+
+        resp = api.delete_namespaced_pod(name=name, body={},
+                                         namespace='default')
 
     def test_service_apis(self):
-        client = api_client.ApiClient(config=self.config)
+        client = api_client.ApiClient(configuration=self.config)
         api = core_v1_api.CoreV1Api(client)
 
         name = 'frontend-' + short_uuid()
@@ -152,11 +195,11 @@ class TestClient(unittest.TestCase):
         self.assertEqual(2, len(resp.spec.ports))
         self.assertTrue(resp.status)
 
-        resp = api.delete_namespaced_service(name=name,
+        resp = api.delete_namespaced_service(name=name, body={},
                                              namespace='default')
 
     def test_replication_controller_apis(self):
-        client = api_client.ApiClient(config=self.config)
+        client = api_client.ApiClient(configuration=self.config)
         api = core_v1_api.CoreV1Api(client)
 
         name = 'frontend-' + short_uuid()
@@ -189,7 +232,7 @@ class TestClient(unittest.TestCase):
             name=name, body={}, namespace='default')
 
     def test_configmap_apis(self):
-        client = api_client.ApiClient(config=self.config)
+        client = api_client.ApiClient(configuration=self.config)
         api = core_v1_api.CoreV1Api(client)
 
         name = 'test-configmap-' + short_uuid()
@@ -225,7 +268,7 @@ class TestClient(unittest.TestCase):
         self.assertEqual([], resp.items)
 
     def test_node_apis(self):
-        client = api_client.ApiClient(config=self.config)
+        client = api_client.ApiClient(configuration=self.config)
         api = core_v1_api.CoreV1Api(client)
 
         for item in api.list_node().items:

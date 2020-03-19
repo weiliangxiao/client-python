@@ -1,6 +1,6 @@
 # kubernetes.client.AuthenticationV1beta1Api
 
-All URIs are relative to *https://localhost*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -9,32 +9,37 @@ Method | HTTP request | Description
 
 
 # **create_token_review**
-> V1beta1TokenReview create_token_review(body, pretty=pretty)
+> V1beta1TokenReview create_token_review(body, dry_run=dry_run, field_manager=field_manager, pretty=pretty)
 
 
 
 create a TokenReview
 
-### Example 
+### Example
+
+* Api Key Authentication (BearerToken): 
 ```python
-from __future__ import print_statement
+from __future__ import print_function
 import time
 import kubernetes.client
 from kubernetes.client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: BearerToken
-kubernetes.client.configuration.api_key['authorization'] = 'YOUR_API_KEY'
+configuration = kubernetes.client.Configuration()
+configuration.api_key['authorization'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# kubernetes.client.configuration.api_key_prefix['authorization'] = 'Bearer'
+# configuration.api_key_prefix['authorization'] = 'Bearer'
 
 # create an instance of the API class
-api_instance = kubernetes.client.AuthenticationV1beta1Api()
+api_instance = kubernetes.client.AuthenticationV1beta1Api(kubernetes.client.ApiClient(configuration))
 body = kubernetes.client.V1beta1TokenReview() # V1beta1TokenReview | 
+dry_run = 'dry_run_example' # str | When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed (optional)
+field_manager = 'field_manager_example' # str | fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. (optional)
 pretty = 'pretty_example' # str | If 'true', then the output is pretty printed. (optional)
 
-try: 
-    api_response = api_instance.create_token_review(body, pretty=pretty)
+try:
+    api_response = api_instance.create_token_review(body, dry_run=dry_run, field_manager=field_manager, pretty=pretty)
     pprint(api_response)
 except ApiException as e:
     print("Exception when calling AuthenticationV1beta1Api->create_token_review: %s\n" % e)
@@ -45,6 +50,8 @@ except ApiException as e:
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **body** | [**V1beta1TokenReview**](V1beta1TokenReview.md)|  | 
+ **dry_run** | **str**| When present, indicates that modifications should not be persisted. An invalid or unrecognized dryRun directive will result in an error response and no further processing of the request. Valid values are: - All: all dry run stages will be processed | [optional] 
+ **field_manager** | **str**| fieldManager is a name associated with the actor or entity that is making these changes. The value must be less than or 128 characters long, and only contain printable characters, as defined by https://golang.org/pkg/unicode/#IsPrint. | [optional] 
  **pretty** | **str**| If &#39;true&#39;, then the output is pretty printed. | [optional] 
 
 ### Return type
@@ -57,7 +64,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: */*
+ - **Content-Type**: Not defined
  - **Accept**: application/json, application/yaml, application/vnd.kubernetes.protobuf
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -69,23 +76,26 @@ Name | Type | Description  | Notes
 
 get available resources
 
-### Example 
+### Example
+
+* Api Key Authentication (BearerToken): 
 ```python
-from __future__ import print_statement
+from __future__ import print_function
 import time
 import kubernetes.client
 from kubernetes.client.rest import ApiException
 from pprint import pprint
 
 # Configure API key authorization: BearerToken
-kubernetes.client.configuration.api_key['authorization'] = 'YOUR_API_KEY'
+configuration = kubernetes.client.Configuration()
+configuration.api_key['authorization'] = 'YOUR_API_KEY'
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# kubernetes.client.configuration.api_key_prefix['authorization'] = 'Bearer'
+# configuration.api_key_prefix['authorization'] = 'Bearer'
 
 # create an instance of the API class
-api_instance = kubernetes.client.AuthenticationV1beta1Api()
+api_instance = kubernetes.client.AuthenticationV1beta1Api(kubernetes.client.ApiClient(configuration))
 
-try: 
+try:
     api_response = api_instance.get_api_resources()
     pprint(api_response)
 except ApiException as e:
@@ -105,7 +115,7 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: application/json, application/yaml, application/vnd.kubernetes.protobuf
+ - **Content-Type**: Not defined
  - **Accept**: application/json, application/yaml, application/vnd.kubernetes.protobuf
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

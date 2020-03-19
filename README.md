@@ -1,11 +1,11 @@
 # Kubernetes Python Client
 
-[![Build Status](https://travis-ci.org/kubernetes-incubator/client-python.svg?branch=master)](https://travis-ci.org/kubernetes-incubator/client-python)
+[![Build Status](https://travis-ci.org/kubernetes-client/python.svg?branch=master)](https://travis-ci.org/kubernetes-client/python)
 [![PyPI version](https://badge.fury.io/py/kubernetes.svg)](https://badge.fury.io/py/kubernetes)
-[![codecov](https://codecov.io/gh/kubernetes-incubator/client-python/branch/master/graph/badge.svg)](https://codecov.io/gh/kubernetes-incubator/client-python "Non-generated packages only")
+[![codecov](https://codecov.io/gh/kubernetes-client/python/branch/master/graph/badge.svg)](https://codecov.io/gh/kubernetes-client/python "Non-generated packages only")
 [![pypi supported versions](https://img.shields.io/pypi/pyversions/kubernetes.svg)](https://pypi.python.org/pypi/kubernetes)
-[![Client Capabilities](https://img.shields.io/badge/Kubernetes%20client-Silver-blue.svg?style=flat&colorB=C0C0C0&colorA=306CE8)](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/csi-new-client-library-procedure.md#client-capabilities)
-[![Client Support Level](https://img.shields.io/badge/kubernetes%20client-beta-green.svg?style=flat&colorA=306CE8)](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/csi-new-client-library-procedure.md#client-support-level)
+[![Client Capabilities](https://img.shields.io/badge/Kubernetes%20client-Silver-blue.svg?style=flat&colorB=C0C0C0&colorA=306CE8)](http://bit.ly/kubernetes-client-capabilities-badge)
+[![Client Support Level](https://img.shields.io/badge/kubernetes%20client-beta-green.svg?style=flat&colorA=306CE8)](http://bit.ly/kubernetes-client-support-badge)
 
 Python client for the [kubernetes](http://kubernetes.io/) API.
 
@@ -14,8 +14,8 @@ Python client for the [kubernetes](http://kubernetes.io/) API.
 From source:
 
 ```
-git clone --recursive https://github.com/kubernetes-incubator/client-python.git
-cd client-python
+git clone --recursive https://github.com/kubernetes-client/python.git
+cd python
 python setup.py install
 ```
 
@@ -25,7 +25,7 @@ From [PyPi](https://pypi.python.org/pypi/kubernetes/) directly:
 pip install kubernetes
 ```
 
-## Example
+## Examples
 
 list all pods:
 
@@ -68,8 +68,7 @@ More examples can be found in [examples](examples/) folder. To run examples, run
 python -m examples.example1
 ```
 
-(replace example1 with the example base filename)
-
+(replace example1 with one of the filenames in the examples folder)
 
 ## Documentation
 
@@ -78,61 +77,66 @@ All APIs and Models' documentation can be found at the [Generated client's READM
 ## Compatibility
 
 `client-python` follows [semver](http://semver.org/), so until the major version of
-client-python gets increased, your code will continue to work with explicitly 
+client-python gets increased, your code will continue to work with explicitly
 supported versions of Kubernetes clusters.
 
 #### Compatibility matrix
 
-|                    | Kubernetes 1.3 | Kubernetes 1.4 | Kubernetes 1.5 | Kubernetes 1.6 | Kubernetes 1.7 |
-|--------------------|----------------|----------------|----------------|----------------|----------------|
-| client-python 1.0  | +              | +              | ✓              | -              | -              |
-| client-python 2.0  | +              | +              | +              | ✓              | -              |
-| client-python 3.0  | +              | +              | +              | +              | ✓              |
-| client-python HEAD | +              | +              | +              | +              | +              |
+|                    | Kubernetes 1.13 | Kubernetes 1.14 | Kubernetes 1.15 |
+|--------------------|-----------------|-----------------|-----------------|
+| client-python 9.0  |✓                |+-               |+-               |
+| client-python 10.0 |+-               |✓                |+-               |
+| client-python 11.0 |+-               |+-               |✓                |
+| client-python HEAD |+-               |+-               |+-               |
 
 Key:
 
 * `✓` Exactly the same features / API objects in both client-python and the Kubernetes
   version.
-* `+` client-python has features or api objects that may not be present in the
-  Kubernetes cluster, but everything they have in common will work.
-* `-` The Kubernetes cluster has features the client-python library can't use
-  (additional API objects, etc).
+* `+` client-python has features or API objects that may not be present in the Kubernetes
+ cluster, either due to that client-python has additional new API, or that the server has
+ removed old API. However, everything they have in common (i.e., most APIs) will work.
+ Please note that alpha APIs may vanish or change significantly in a single release.
+* `-` The Kubernetes cluster has features the client-python library can't use, either due
+ to the server has additional new API, or that client-python has removed old API. However,
+ everything they share in common (i.e., most APIs) will work.
 
 See the [CHANGELOG](./CHANGELOG.md) for a detailed description of changes
 between client-python versions.
 
-| Client version | Canonical source for OpenAPI spec    | Maintenance status            |
-|----------------|--------------------------------------|-------------------------------|
-| 1.0 Alpha/Beta | Kubernetes main repo, 1.5 branch     | ✗                             |
-| 1.0.x          | Kubernetes main repo, 1.5 branch     | ✓                             |
-| 2.0 Alpha/Beta | Kubernetes main repo, 1.6 branch     | ✗                             |
-| 2.0.x          | Kubernetes main repo, 1.6 branch     | ✓                             |
-| 3.0 Alpha/Beta | Kubernetes main repo, 1.7 branch     | ✗                             |
-| 3.0            | Kubernetes main repo, 1.7 branch     | ✓                             |
-
+| Client version  | Canonical source for OpenAPI spec    | Maintenance status            |
+|-----------------|--------------------------------------|-------------------------------|
+| 5.0 Alpha/Beta  | Kubernetes main repo, 1.9 branch     | ✗                             |
+| 5.0             | Kubernetes main repo, 1.9 branch     | ✗                             |
+| 6.0 Alpha/Beta  | Kubernetes main repo, 1.10 branch    | ✗                             |
+| 6.0             | Kubernetes main repo, 1.10 branch    | ✗                             |
+| 7.0 Alpha/Beta  | Kubernetes main repo, 1.11 branch    | ✗                             |
+| 7.0             | Kubernetes main repo, 1.11 branch    | ✗                             |
+| 8.0 Alpha/Beta  | Kubernetes main repo, 1.12 branch    | ✗                             |
+| 8.0             | Kubernetes main repo, 1.12 branch    | ✗                             |
+| 9.0 Alpha/Beta  | Kubernetes main repo, 1.13 branch    | ✗                             |
+| 9.0             | Kubernetes main repo, 1.13 branch    | ✓                             |
+| 10.0 Alpha/Beta | Kubernetes main repo, 1.14 branch    | ✗                             |
+| 10.0            | Kubernetes main repo, 1.14 branch    | ✓                             |
+| 11.0 Alpha/Beta | Kubernetes main repo, 1.15 branch    | ✗                             |
+| 11.0            | Kubernetes main repo, 1.15 branch    | ✓                             |
 
 Key:
 
-* `✓` Changes in main Kubernetes repo are manually ([should be automated](https://github.com/kubernetes-incubator/client-python/issues/177)) published to client-python when they are available.
+* `✓` Changes in main Kubernetes repo are manually ([should be automated](https://github.com/kubernetes-client/python/issues/177)) published to client-python when they are available.
 * `✗` No longer maintained; please upgrade.
+
+Kubernetes supports [three minor releases](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/release/versioning.md#supported-releases-and-component-skew) at a time. "Support" means we expect users to be running that version in production, though we may not port fixes back before the latest minor version. For example, when v1.3 comes out, v1.0 will no longer be supported. In consistent with Kubernetes support policy, we expect to support **three GA major releases** (corresponding to three Kubernetes minor releases) at a time.
 
 Note: There would be no maintenance for alpha/beta releases except the latest one.
 
 ## Community, Support, Discussion
 
-You can reach the maintainers of this project at [SIG API Machinery](https://github.com/kubernetes/community/tree/master/sig-api-machinery). If you have any problem with the package or any suggestions, please file an [issue](https://github.com/kubernetes-incubator/client-python/issues).
+If you have any problem on using the package or any suggestions, please start with reaching the [Kubernetes clients slack channel](https://kubernetes.slack.com/messages/C76GB48RK/), or filing an [issue](https://github.com/kubernetes-client/python/issues) to let us know. You can also reach the maintainers of this project at [SIG API Machinery](https://github.com/kubernetes/community/tree/master/sig-api-machinery), where this project falls under.
 
 ### Code of Conduct
 
 Participation in the Kubernetes community is governed by the [CNCF Code of Conduct](https://github.com/cncf/foundation/blob/master/code-of-conduct.md).
-
-## Kubernetes Incubator
-
-This is a [Kubernetes Incubator project](https://github.com/kubernetes/community/blob/master/incubator.md). 
-
-* [SIG: sig-api-machinery](https://github.com/kubernetes/community/tree/master/sig-api-machinery)
-
 
 ## Troubleshooting
 
@@ -157,6 +161,16 @@ You'll need a version with OpenSSL version 1.0.0 or later.
 
 ### Hostname doesn't match
 
-If you get an `ssl.CertificateError` complaining about hostname match, your installed packages does not meet version [requirements](requirements.txt). 
+If you get an `ssl.CertificateError` complaining about hostname match, your installed packages does not meet version [requirements](requirements.txt).
 Specifically check `ipaddress` and `urllib3` package versions to make sure they met requirements in [requirements.txt](requirements.txt) file.
 
+### Why Exec/Attach calls doesn't work
+
+Starting from 4.0 release, we do not support directly calling exec or attach calls. you should use stream module to call them. so instead
+of `resp = api.connect_get_namespaced_pod_exec(name, ...` you should call `resp = stream(api.connect_get_namespaced_pod_exec, name, ...`.
+
+Using Stream will overwrite the requests protocol in _core_v1_api.CoreV1Api()_
+This will cause a failure in  non-exec/attach calls. If you reuse your api client object, you will need to
+recreate it between api calls that use _stream_ and other api calls.
+
+See more at [exec example](examples/pod_exec.py).
