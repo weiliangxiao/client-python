@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 # Do not edit these constants. They will be updated automatically
 # by scripts/update-client.sh.
-CLIENT_VERSION = "3.0.0-snapshot"
+CLIENT_VERSION = "37.0.0+snapshot"
 PACKAGE_NAME = "kubernetes"
-DEVELOPMENT_STATUS = "4 - Beta"
+DEVELOPMENT_STATUS = "3 - Alpha"
 
 # To install the library, run the following
 #
@@ -27,8 +27,22 @@ DEVELOPMENT_STATUS = "4 - Beta"
 # prerequisite: setuptools
 # http://pypi.python.org/pypi/setuptools
 
+EXTRAS = {
+    'google-auth': ['google-auth>=1.0.1']
+}
+REQUIRES = []
 with open('requirements.txt') as f:
-    REQUIRES = f.readlines()
+    for line in f:
+        line, _, _ = line.partition('#')
+        line = line.strip()
+        if not line or line.startswith('setuptools'):
+            continue
+        elif ';' in line:
+            requirement, _, specifier = line.partition(';')
+            for_specifier = EXTRAS.setdefault(':{}'.format(specifier), [])
+            for_specifier.append(requirement)
+        else:
+            REQUIRES.append(line)
 
 with open('test-requirements.txt') as f:
     TESTS_REQUIRES = f.readlines()
@@ -39,31 +53,39 @@ setup(
     description="Kubernetes python client",
     author_email="",
     author="Kubernetes",
-    license="Apache License Version 2.0",
-    url="https://github.com/kubernetes-incubator/client-python",
+    license_expression="Apache-2.0",
+    url="https://github.com/kubernetes-client/python",
     keywords=["Swagger", "OpenAPI", "Kubernetes"],
     install_requires=REQUIRES,
     tests_require=TESTS_REQUIRES,
+    extras_require=EXTRAS,
     packages=['kubernetes', 'kubernetes.client', 'kubernetes.config',
-              'kubernetes.watch', 'kubernetes.client.apis',
-              'kubernetes.client.models'],
+              'kubernetes.watch', 'kubernetes.client.api',
+              'kubernetes.stream', 'kubernetes.client.models',
+              'kubernetes.utils', 'kubernetes.client.apis',
+              'kubernetes.dynamic', 'kubernetes.leaderelection',
+              'kubernetes.leaderelection.resourcelock',
+              'kubernetes.informer',
+              ],
+    package_data={
+        'kubernetes': ['py.typed'],
+        'kubernetes.client': ['py.typed'],
+    },
     include_package_data=True,
-    long_description="""\
-    Python client for kubernetes http://kubernetes.io/
-    """,
+    long_description="Python client for kubernetes http://kubernetes.io/",
+    python_requires='>=3.10',
     classifiers=[
         "Development Status :: %s" % DEVELOPMENT_STATUS,
         "Topic :: Utilities",
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
-        "License :: OSI Approved :: Apache Software License",
         "Operating System :: OS Independent",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
+        "Programming Language :: Python :: 3.14",
     ],
 )

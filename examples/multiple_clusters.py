@@ -12,14 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""
+Allows you to pick a context and then lists all pods in the chosen context.
+
+Please install the pick library before running this example.
+"""
+
+from pick import pick  # install pick using `pip install pick`
+
 from kubernetes import client, config
-# install pick using "pip install pick". It is not included
-# as a dependency because it only used in examples
-from pick import pick
+from kubernetes.client import configuration
 
 
 def main():
-
     contexts, active_context = config.list_kube_config_contexts()
     if not contexts:
         print("Cannot find any context in kube-config file.")
@@ -38,13 +43,11 @@ def main():
 
     print("\nList of pods on %s:" % cluster1)
     for i in client1.list_pod_for_all_namespaces().items:
-        print("%s\t%s\t%s" %
-              (i.status.pod_ip, i.metadata.namespace, i.metadata.name))
+        print(f"{i.status.pod_ip}\t{i.metadata.namespace}\t{i.metadata.name}")
 
-    print("\n\nList of pods on %s:" % cluster2)
+    print(f"\n\nList of pods on {cluster2}:")
     for i in client2.list_pod_for_all_namespaces().items:
-        print("%s\t%s\t%s" %
-              (i.status.pod_ip, i.metadata.namespace, i.metadata.name))
+        print(f"{i.status.pod_ip}\t{i.metadata.namespace}\t{i.metadata.name}")
 
 
 if __name__ == '__main__':

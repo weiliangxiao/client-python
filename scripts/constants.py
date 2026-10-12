@@ -15,16 +15,16 @@
 import sys
 
 # Kubernetes branch to get the OpenAPI spec from.
-KUBERNETES_BRANCH = "release-1.7"
+KUBERNETES_BRANCH = "release-1.37"
 
 # client version for packaging and releasing.
-CLIENT_VERSION = "3.0.0-snapshot"
+CLIENT_VERSION = "37.0.0+snapshot"
 
 # Name of the release package
 PACKAGE_NAME = "kubernetes"
 
 # Stage of development, mainly used in setup.py's classifiers.
-DEVELOPMENT_STATUS = "4 - Beta"
+DEVELOPMENT_STATUS = "3 - Alpha"
 
 
 # If called directly, return the constant value given

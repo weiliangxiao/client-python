@@ -13,22 +13,43 @@
 # limitations under the License.
 
 import os
+import re
 import sys
 
-from recommonmark.parser import CommonMarkParser
+from recommonmark.transform import AutoStructify
+
+# --
+# Copy README.md, CONTRIBUTING.md to source/ directory and replace
+# all paths to point github files.
+def _copy_with_converting_link_to_repo(filename, new_filename):
+    base_url = 'https://github.com/kubernetes-client/python/blob/master/'
+
+    def subf(subs):
+        label, url = subs.groups()
+        if not url.startswith('http://') and not url.startswith('https://'):
+            url = base_url + url
+        return label + '(' + url + ')'
+
+    with open(filename, "r") as r:
+        data = re.sub("(\[[^\]]+\])\(([^\)]+)\)", subf, r.read())
+
+    with open(new_filename, "w") as w:
+        w.write(data)
+
+_copy_with_converting_link_to_repo("../../README.md", "README.md")
+_copy_with_converting_link_to_repo("../../CONTRIBUTING.md", "CONTRIBUTING.md")
+# --
 
 sys.path.insert(0, os.path.abspath('../..'))
 # -- General configuration ----------------------------------------------------
-
-source_parsers = {
-    '.md': CommonMarkParser,
-}
 
 source_suffix = ['.rst', '.md']
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
 extensions = [
+    'sphinx_markdown_tables',
+    'recommonmark',
     'sphinx.ext.autodoc',
     #'sphinx.ext.intersphinx',
 ]
@@ -80,3 +101,10 @@ latex_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 #intersphinx_mapping = {'http://docs.python.org/': None}
+def setup(app):
+    app.add_config_value('recommonmark_config', {
+            'auto_toc_tree_section': 'Contents',
+            'enable_eval_rst': True,
+            }, True)
+    app.add_transform(AutoStructify)
+

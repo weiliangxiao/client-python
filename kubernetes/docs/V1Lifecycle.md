@@ -1,11 +1,30 @@
 # V1Lifecycle
 
+Lifecycle describes actions that the management system should take in response to container lifecycle events. For the PostStart and PreStop lifecycle handlers, management of the container blocks until the action is complete, unless the container process fails, in which case the handler is aborted.
+
 ## Properties
+
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**post_start** | [**V1Handler**](V1Handler.md) | PostStart is called immediately after a container is created. If the handler fails, the container is terminated and restarted according to its restart policy. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks | [optional] 
-**pre_stop** | [**V1Handler**](V1Handler.md) | PreStop is called immediately before a container is terminated. The container is terminated after the handler completes. The reason for termination is passed to the handler. Regardless of the outcome of the handler, the container is eventually terminated. Other management of the container blocks until the hook completes. More info: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/#container-hooks | [optional] 
+**post_start** | [**V1LifecycleHandler**](V1LifecycleHandler.md) |  | [optional]
+**pre_stop** | [**V1LifecycleHandler**](V1LifecycleHandler.md) |  | [optional]
+**stop_signal** | **str** | StopSignal defines which signal will be sent to a container when it is being stopped. If not specified, the default is defined by the container runtime in use. StopSignal can only be set for Pods with a non-empty .spec.os.name | [optional]
 
+## Example
+
+```python
+from kubernetes.client.models.v1_lifecycle import V1Lifecycle
+
+# TODO update the JSON string below
+json = "{}"
+# create an instance of V1Lifecycle from a JSON string
+v1_lifecycle_instance = V1Lifecycle.from_json(json)
+# print the JSON string representation of the object
+print(V1Lifecycle.to_json())
+
+# convert the object into a dict
+v1_lifecycle_dict = v1_lifecycle_instance.to_dict()
+# create an instance of V1Lifecycle from a dict
+v1_lifecycle_from_dict = V1Lifecycle.from_dict(v1_lifecycle_dict)
+```
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
-
-

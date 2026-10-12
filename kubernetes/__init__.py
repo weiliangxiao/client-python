@@ -1,4 +1,4 @@
-# Copyright 2016 The Kubernetes Authors.
+# Copyright 2022 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,13 @@
 
 __project__ = 'kubernetes'
 # The version is auto-updated. Please do not edit.
-__version__ = "3.0.0-snapshot"
+__version__ = "37.0.0+snapshot"
 
-import kubernetes.client
-import kubernetes.config
-import kubernetes.watch
+from . import client
+from . import config
+from . import dynamic
+from . import watch
+from . import stream
+from . import utils
+from . import leaderelection
+from . import informer

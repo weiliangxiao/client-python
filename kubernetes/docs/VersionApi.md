@@ -1,43 +1,61 @@
 # kubernetes.client.VersionApi
 
-All URIs are relative to *https://localhost*
+All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**get_code**](VersionApi.md#get_code) | **GET** /version/ | 
+[**get_code**](VersionApi.md#get_code) | **GET** /version/ |
 
 
 # **get_code**
 > VersionInfo get_code()
 
+get the version information for this server
 
+### Example
 
-get the code version
+* Api Key Authentication (BearerToken):
 
-### Example 
 ```python
-from __future__ import print_statement
-import time
 import kubernetes.client
+from kubernetes.client.models.version_info import VersionInfo
 from kubernetes.client.rest import ApiException
 from pprint import pprint
 
+# Defining the host is optional and defaults to http://localhost
+# See configuration.py for a list of all supported configuration parameters.
+configuration = kubernetes.client.Configuration(
+    host = "http://localhost"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
 # Configure API key authorization: BearerToken
-kubernetes.client.configuration.api_key['authorization'] = 'YOUR_API_KEY'
+configuration.api_key['BearerToken'] = os.environ["API_KEY"]
+
 # Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-# kubernetes.client.configuration.api_key_prefix['authorization'] = 'Bearer'
+# configuration.api_key_prefix['BearerToken'] = 'Bearer'
 
-# create an instance of the API class
-api_instance = kubernetes.client.VersionApi()
+# Enter a context with an instance of the API client
+with kubernetes.client.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = kubernetes.client.VersionApi(api_client)
 
-try: 
-    api_response = api_instance.get_code()
-    pprint(api_response)
-except ApiException as e:
-    print("Exception when calling VersionApi->get_code: %s\n" % e)
+    try:
+        api_response = api_instance.get_code()
+        print("The response of VersionApi->get_code:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling VersionApi->get_code: %s\n" % e)
 ```
 
+
+
 ### Parameters
+
 This endpoint does not need any parameter.
 
 ### Return type
@@ -50,8 +68,14 @@ This endpoint does not need any parameter.
 
 ### HTTP request headers
 
- - **Content-Type**: application/json
+ - **Content-Type**: Not defined
  - **Accept**: application/json
 
-[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
+### HTTP response details
 
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | OK |  -  |
+**401** | Unauthorized |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
